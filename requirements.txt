@@ -1,0 +1,4 @@
+stripe >= 2.55.1
+json
+django
+harbor-py-light
