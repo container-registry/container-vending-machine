@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from sync.models import Customer
 
 from harborclient_light import harborclient
 
@@ -21,11 +22,8 @@ Tasks:
 """
 
 def handle_new_subscription(subscription):
-  stripe_customer = subscription.customer
-  customer = Customer(email=stripe_customer.email,
-      stripe_id=stripe_customer.id)
-  customer.create_harbor_user
-  # extend validity date
+  customer = Customer(stripe_id=subscription['customer'])
+  customer.save()
 
 def handle_paid_invoice(paid_invoice):
   customer = paid_invoice.customer

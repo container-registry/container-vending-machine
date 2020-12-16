@@ -1,13 +1,11 @@
 from django.db import models
 import string
-
 import stripe
 
 class Customer(models.Model):
     email = models.CharField(max_length=70)
     name = models.CharField(max_length=70)
     stripe_id = models.CharField(max_length=70)
-    expiry_date = models.DateField()
 
     def create_stripe_customer():
         if (not self.stripe_id) and self.customer_email:
