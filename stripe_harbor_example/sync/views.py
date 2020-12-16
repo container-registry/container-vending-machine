@@ -1,26 +1,30 @@
-import stripe
-import json
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
+from harborclient_light import harborclient
 
+import stripe
 stripe.api_key = "sk_test_WCDAe6Ol0ufWlTxkvRw8JhRt00NguuRhXG"
+
+def setup_harbor_client():
+    harbor_host = "harbor.container-registry.com"
+    harbor_user = "admin_user"
+    harbor_pass = "admin_pass"
+    return harborclient.HarborClient(
+            harbor_host, harbor_user, harbor_pass)
 
 """
 Tasks:
-    * 
     * for each canceled customer, disable credentials
     * (optional) recurring job - sync to look for new/canceled accounts
 
 """
 
-def create_new_customer(customer_email):
-  stripe.Customer.create(email=customer_email)
-  # create the customer in harbor? or in a database
-  # create credentials in harbor
-
 def handle_new_subscription(subscription):
-  customer = subscription.customer
-  # harbor.enable_credentials(customer)
+  stripe_customer = subscription.customer
+  customer = Customer(email=stripe_customer.email,
+      stripe_id=stripe_customer.id)
+  customer.create_harbor_user
   # extend validity date
 
 def handle_paid_invoice(paid_invoice):
@@ -56,3 +60,4 @@ def webhook_handler(request):
     print('Unhandled event type {}'.format(event.type))
 
   return HttpResponse(status=200)
+
