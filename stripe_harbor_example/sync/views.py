@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from sync.models import Customer
+import environ
+env = environ.Env(DEBUG=(bool, False))
 
 import stripe
-stripe.api_key = "sk_test_WCDAe6Ol0ufWlTxkvRw8JhRt00NguuRhXG"
+stripe.api_key = env('STRIPE_API_KEY')
 
 def handle_new_subscription(subscription):
     customer = Customer.objects.get_or_create(
