@@ -1,6 +1,7 @@
 from django.db import models
 import string
 import stripe
+import sync.harbor as h
 
 class Customer(models.Model):
     email = models.CharField(max_length=70)
@@ -16,18 +17,10 @@ class Customer(models.Model):
             print("Could not create a Stripe customer")
 
     def create_harbor_user():
-        if self.customer_email:
-            generated_password = ''.join(
-                    random.sample(string.ascii_letters + string.digits, 16)),
-            user = harbor.create_user(
-                # use email as username for simplicity
-                self_customer_email,
-                self.customer_email,
-                generated_password,
-                # don't set a real name
-                "",
-                "Created through the Customer model")
-            # send email to user
+        h.create_harbor_user_from_customer(self)
 
-    def extend_account_validity():
-        return None
+    def provision_product_access():
+        h.provision_harbor_permissions_for_customer(self)
+
+    def remove_product_access():
+        h.remove_product_access_for_customer(self)
