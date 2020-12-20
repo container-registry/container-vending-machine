@@ -4,9 +4,10 @@ import stripe
 import sync.harbor as h
 
 class Customer(models.Model):
-    email = models.CharField(max_length=70)
-    name = models.CharField(max_length=70)
-    stripe_id = models.CharField(max_length=70)
+    email = models.CharField(max_length=70, null=True)
+    name = models.CharField(max_length=70, null=True)
+    stripe_id = models.CharField(max_length=70, null=True)
+    harbor_login = models.CharField(max_length=70, null=True)
 
     def create_stripe_customer():
         if (not self.stripe_id) and self.customer_email:
@@ -21,10 +22,6 @@ class Customer(models.Model):
             self.email = stripe.Customer.retrieve(self.stripe_id)['email']
 
     def create_harbor_user(self):
-        h.create_harbor_user_from_customer(self)
-
-    def provision_product_access(self):
-        h.provision_harbor_permissions_for_customer(self)
-
-    def remove_product_access(self):
-        h.remove_product_access_for_customer(self)
+        harbor_account = h.create_harbor_user_from_customer(self)
+        self.harbor_login = harbor_account['name']
+        self.save()

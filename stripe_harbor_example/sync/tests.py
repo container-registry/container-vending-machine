@@ -11,16 +11,19 @@ import sync.harbor as h
 class TestCustomer(TestCase):
     def test_creator(self):
         customer = Customer()
-        self.assertEqual(customer.email, '')
-        self.assertEqual(customer.stripe_id, '')
+        self.assertEqual(customer.email, None)
+        self.assertEqual(customer.stripe_id, None)
 
 class TestViews(TestCase):
     def test_new_subscription(self):
         stripe.Customer.retrieve = Mock(return_value={'email':'customer@example.org'})
+        h.create_robot_account_for_project = Mock(return_value={'name':'robot$account_name', 'token':'secret'})
+
         customer_id = 'cus_Fg2W5cdlpF1oSs'
         subscription = {'customer': customer_id}
 
         self.assertEqual(len(Customer.objects.filter(stripe_id=customer_id)), 0)
+
         v.handle_new_subscription(subscription)
         self.assertEqual(len(Customer.objects.filter(stripe_id=customer_id)), 1)
 

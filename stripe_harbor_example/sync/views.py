@@ -12,7 +12,6 @@ def handle_new_subscription(subscription):
             stripe_id=subscription['customer'])[0]
     customer.ensure_email()
     customer.create_harbor_user()
-    customer.provision_product_access()
     customer.save()
 
 def handle_deleted_subscription(deleted_subscription):

@@ -52,11 +52,11 @@ def customer_email_to_harbor_username(email):
 def create_harbor_user_from_customer(customer):
     if not customer.email:
         raise ValueError("Couldn't create a harbor user for customer %s - the record doesn't have the email set" % (customer.id))
-    # send email?
-    return {'name':'robot', 'token':'secret'}
+    return create_robot_account_for_project(
+            customer_email_to_harbor_username(
+                customer.email))
 
 def provision_harbor_permissions_for_customer(customer):
-    project_name = "software_product_repo"
     # add permissions
     return True
 
