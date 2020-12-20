@@ -1,13 +1,51 @@
-from harborclient_light import harborclient
+import datetime
+import requests
+import json
+import environ
+
+env = environ.Env(DEBUG=(bool, False))
+
+
+harbor_endpoint = 'https://' + env('HARBOR_HOST') + '/api/v2.0'
+
+def harbor_get(path):
+    return requests.get(
+            harbor_endpoint + path,
+            auth=(env('HARBOR_USERNAME'), env('HARBOR_PASSWORD')),
+            headers={'Accept':'application/json'})
+
+def harbor_post(path, data):
+    return requests.post(
+            harbor_endpoint + path,
+            data=data,
+            auth=(env('HARBOR_USERNAME'), env('HARBOR_PASSWORD')),
+            headers={'Accept':'application/json'})
+
+def get_robot_accounts_for_project():
+    accounts = harbor_get('/projects/10/robots').json()
+
+def create_robot_account_for_project():
+    account = harbor_post(
+            '/projects/10/robots',
+            json.dumps({
+                'name':'sample_name',
+                'expires_at': int((datetime.datetime.now() + datetime.timedelta(days=30)).timestamp()),
+                'access': [
+                    {"resource":"/project/10/repository","action":"pull"},
+                    {"resource":"/project/10/helm-chart","action":"read"}
+                    ],
+                })
+            )
+    return account.json()
 
 def setup_harbor_client():
-    harbor_host = "harbor.container-registry.com"
-    harbor_user = "admin_user"
-    harbor_pass = "admin_pass"
+    harbor_host = env('HARBOR_HOST')
+    harbor_username = env('HARBOR_USERNAME')
+    harbor_password = env('HARBOR_PASSWORD')
     return harborclient.HarborClient(
-            harbor_host, harbor_user, harbor_pass)
+            harbor_host, harbor_username, harbor_password)
 
-harbor_client = setup_harbor_client()
+#harbor_client = setup_harbor_client()
 
 def create_harbor_user_from_customer(customer):
     if not self.customer_email:
