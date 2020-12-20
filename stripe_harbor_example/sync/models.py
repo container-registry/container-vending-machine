@@ -16,11 +16,15 @@ class Customer(models.Model):
         else:
             print("Could not create a Stripe customer")
 
-    def create_harbor_user():
+    def ensure_email(self):
+        if not self.email:
+            self.email = stripe.Customer.retrieve(self.stripe_id)['email']
+
+    def create_harbor_user(self):
         h.create_harbor_user_from_customer(self)
 
-    def provision_product_access():
+    def provision_product_access(self):
         h.provision_harbor_permissions_for_customer(self)
 
-    def remove_product_access():
+    def remove_product_access(self):
         h.remove_product_access_for_customer(self)

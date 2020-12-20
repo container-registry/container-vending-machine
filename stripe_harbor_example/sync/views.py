@@ -9,7 +9,8 @@ stripe.api_key = env('STRIPE_API_KEY')
 
 def handle_new_subscription(subscription):
     customer = Customer.objects.get_or_create(
-            stripe_id=subscription['customer'])
+            stripe_id=subscription['customer'])[0]
+    customer.ensure_email()
     customer.create_harbor_user()
     customer.provision_product_access()
     customer.save()

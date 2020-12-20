@@ -5,8 +5,9 @@ import environ
 
 env = environ.Env(DEBUG=(bool, False))
 
-
 harbor_endpoint = 'https://' + env('HARBOR_HOST') + '/api/v2.0'
+harbor_project_path = '/projects/10'
+harbor_robots_path = harbor_project_path + '/robots'
 
 def harbor_get(path):
     return requests.get(
@@ -22,47 +23,37 @@ def harbor_post(path, data):
             headers={'Accept':'application/json'})
 
 def get_robot_accounts_for_project():
-    accounts = harbor_get('/projects/10/robots').json()
+    # [{'id': 1, 'name':'robot$account_name', 'disabled':False, ...},
+    #  {'id': 4, 'name':'robot$account_name_2', ...}]
+    return harbor_get(harbor_robots_path).json()
 
-def create_robot_account_for_project():
+def create_robot_account_for_project(account_name):
     account = harbor_post(
-            '/projects/10/robots',
+            harbor_robots_path,
             json.dumps({
-                'name':'sample_name',
+                'name':account_name,
                 'expires_at': int((datetime.datetime.now() + datetime.timedelta(days=30)).timestamp()),
                 'access': [
-                    {"resource":"/project/10/repository","action":"pull"},
-                    {"resource":"/project/10/helm-chart","action":"read"}
+                    {'resource':harbor_project_path+'/repository','action':'pull'},
+                    {'resource':harbor_project_path+'/helm-chart','action':'read'}
                     ],
                 })
             )
+    # {'name':'robot$account_name', 'token':'secret'}
     return account.json()
 
-def setup_harbor_client():
-    harbor_host = env('HARBOR_HOST')
-    harbor_username = env('HARBOR_USERNAME')
-    harbor_password = env('HARBOR_PASSWORD')
-    return harborclient.HarborClient(
-            harbor_host, harbor_username, harbor_password)
-
-#harbor_client = setup_harbor_client()
+def customer_email_to_harbor_username(email):
+    username = email
+    for ch in ['@', '.', '+']:
+        if ch in username:
+            username = str.replace(username, ch, '_')
+    return username
 
 def create_harbor_user_from_customer(customer):
-    if not self.customer_email:
-        raise ValueError("Couldn't create harbor user for customer %s - the object doesn't have the email set" % (customer.id))
-    generated_password = ''.join(
-            random.sample(string.ascii_letters + string.digits, 16)),
-    user = harbor_client.create_user(
-            # use email as username for simplicity
-            self_customer_email,
-            self.customer_email,
-            generated_password,
-            # don't set a real name
-            "",
-            # don't set a comment
-            "")
+    if not customer.email:
+        raise ValueError("Couldn't create a harbor user for customer %s - the record doesn't have the email set" % (customer.id))
     # send email?
-    return user
+    return {'name':'robot', 'token':'secret'}
 
 def provision_harbor_permissions_for_customer(customer):
     project_name = "software_product_repo"
