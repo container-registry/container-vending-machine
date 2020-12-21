@@ -19,6 +19,15 @@ The application is implemented using Python and Django.
 * Error handling is limited, both for Stripe and Harbor.
 * The test coverage is basic and can be improved.
 
+## The most interesting parts of the example
+
+A lot of this example is basic Django code, the most valuable pieces with the business logic are:
+
+* [`stripe_harbor_example/sync/harbor.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/harbor.py) for the Harbor actions over HTTP.
+* [`stripe_harbor_example/sync/models.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/models.py) for the details of what we store in this application’s database.
+* [`stripe_harbor_example/sync/tests.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/tests.py) for tests! Tests are useful.
+* [`stripe_harbor_example/sync/views.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/views.py) for Stripe webhook handling.
+
 ## Running the example
 
 Step 1: Create an environment file at `stripe_harbor_example/stripe_harbor_example/.env`. Here’s an example of the `.env` file’s content (remember to use your Stripe and Harbor credentials):
