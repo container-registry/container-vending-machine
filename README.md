@@ -9,7 +9,7 @@ Create Harbor robot accounts for your customers to allow them to pull your softw
 * Receive [Stripe](https://stripe.com/billing) webhooks, use the information to create customer records in our own database.
 * Provision access to a [Harbor](https://goharbor.io) repository, and remove access if a Stripe subscription expires.
 
-The application is implemented using Python and Django.
+The application is implemented using Python and Django. We use a managed Harbor registry provided by [Container Registry](https://container-registry.com).
 
 ## Limitations of the example
 
