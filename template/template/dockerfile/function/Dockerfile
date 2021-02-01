@@ -20,7 +20,7 @@ ENV fprocess="cat"
 # Set to true to see request in function logs
 ENV write_debug="false"
 
-EXPOSE https://gw.app.8gears.com
+EXPOSE 8080
 
 HEALTHCHECK --interval=3s CMD [ -e /tmp/.lock ] || exit 1
 
