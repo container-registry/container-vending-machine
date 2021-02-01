@@ -1,0 +1,2 @@
+language: python-waitress
+fprocess: python index.py
