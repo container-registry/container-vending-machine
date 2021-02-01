@@ -55,8 +55,8 @@ USER app
 ENV fprocess="python index.py"
 
 ENV cgi_headers="true"
-ENV mode="https"
-ENV upstream_url="https://gw.app.8gears.com"
+ENV mode="http"
+ENV upstream_url="http://127.0.0.1:5000"
 
 HEALTHCHECK --interval=5s CMD [ -e /tmp/.lock ] || exit 1
 

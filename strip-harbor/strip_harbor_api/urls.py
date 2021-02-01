@@ -20,5 +20,5 @@ from sync import  views
 urlpatterns = [
     #path('hello/', views.hello)
     path('admin/', admin.site.urls),
-    path('function/strip-harbor', views.webhook_handler)
+    path('payment', views.webhook_handler)
 ]
