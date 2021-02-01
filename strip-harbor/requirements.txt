@@ -1,0 +1,3 @@
+django
+stripe
+django-environ

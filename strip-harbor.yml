@@ -1,0 +1,12 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: https://gw.app.8gears.com
+
+functions:
+  strip-harbor:
+    lang: python-waitress
+    handler: ./strip-harbor
+    image: c8n.io/container-vendor/strip-harbor:latest
+    environment:
+      WSGI_APP: strip_harbor_api.wsgi:application

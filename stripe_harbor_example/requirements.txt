@@ -1,4 +1,0 @@
-stripe >= 2.55.1
-django >= 3.1
-harbor-py-light
-django-environ >= 0.4.5
