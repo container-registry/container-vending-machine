@@ -14,10 +14,9 @@ The application is implemented using Python and Django. We use a managed Harbor 
 ## Limitations of the example
 
 * We use the Subscription Expired webhook from Stripe to remove access to a Harbor account. A better way to do this would be to set an expiry date for a Harbor robot account, and to extend that date when an outstanding invoice is paid in Stripe.
-* We don’t send the Harbor credentials — need to send them to customers through email.
+* We send the Harbor credentials to customers through email.
 * Harbor usernames are generated automatically from the customer’s email on the subscription and can’t be customized.
 * Error handling is limited, both for Stripe and Harbor.
-* The test coverage is basic and can be improved.
 
 ## The most interesting parts of the example
 
@@ -25,7 +24,6 @@ A lot of this example is basic Django code, the most valuable pieces with the bu
 
 * [`stripe_harbor_example/sync/harbor.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/harbor.py) for the Harbor actions over HTTP.
 * [`stripe_harbor_example/sync/models.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/models.py) for the details of what we store in this application’s database.
-* [`stripe_harbor_example/sync/tests.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/tests.py) for tests! Tests are useful.
 * [`stripe_harbor_example/sync/views.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/views.py) for Stripe webhook handling.
 
 ## Running the example
@@ -89,11 +87,11 @@ $ faas-cli deploy <filename.yml>
 ```
 Step 6:
 
-1 . Create webhook in stripe
+1 . Create webhook in stripe(https://dashboard.stripe.com/test/webhooks)
 
-2. Create Stripe Customer
+2. Create Stripe Customer(for Local testing please install strip cli)
 
-Navigate to Downloaded Strip Folder
+Navigate to Downloaded Strip Folder(For Local Testing)
 ```shell
 $ ./stripe customers create --email=<email_id> --name=<name>
 ```
