@@ -29,46 +29,79 @@ A lot of this example is basic Django code, the most valuable pieces with the bu
 * [`stripe_harbor_example/sync/views.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/views.py) for Stripe webhook handling.
 
 ## Running the example
+```
+Requirements:-
 
-Step 1: Create an environment file at `stripe_harbor_example/stripe_harbor_example/.env`. Here’s an example of the `.env` file’s content (remember to use your Stripe and Harbor credentials):
+-faas-cli
+-Docker
+-Stripe
+```
+Step 1: Create an environment file at `Stripe Harbor Example/stripe_harbor/strip_harbor_api/.env`. Here’s an example of the `.env` file’s content (remember to use your Stripe and Harbor credentials):
 
 ```shell
 DEBUG=True
-SECRET_KEY='django_secret_key'
-STRIPE_API_KEY="sk_test_..."
-
-HARBOR_USERNAME='meaning_of_life'
-HARBOR_PASSWORD='42'
-HARBOR_HOST='demo.goharbor.io'
+SECRET_KEY='secret key'
+STRIPE_API_KEY='api key'
+HARBOR_HOST='io.com'
+HARBOR_USERNAME='x'
+HARBOR_PASSWORD='xxxx'
+HARBOR_PROJECT_ID='xxxx'
+MAILERSEND_API_KEY="xxxxx"
+FROM_EMAIL="abc@gmail.com"
 ```
 
-Step 2: Install all required dependencies.
+Step 2:
+
+1. Login into Docker
 
 ```shell
-$ pip install -r requirements.txt
+$ docker login <server> --username <user> --password-stdin
 ```
 
-Step 3: Run the tests.
+2. Login into Faas-cli
 
 ```shell
-$ cd stripe_harbor_example
-$ ./manage.py test
+$ faas-cli login -g <gateway> -u <username> -p <password>
 ```
 
-Step 4: Run the web server.
+Step 3:
+
+Build the Docker Image
+```
+ Make changes in 'strip-harbor.yml file' for Function and Image(FQDN)  
+```
 
 ```shell
-$ ./manage.py runserver
+$ faas-cli build -f <filename.yml> 
 ```
 
-## Starting an interactive shell
+Step 4:
 
-Start an interactive shell with all dependencies and the environment pre-loaded.
-
+Push the Docker Image
 ```shell
-$ ./manage.py shell
+$ docker push <image name>
+``` 
+Step 5:
+
+Deploy the Image into Openfaas(for that change gateway in 'strip-harbor.yml file' )
+```shell
+$ faas-cli deploy <filename.yml>
+```
+Step 6:
+
+1 . Create webhook in stripe
+
+2. Create Stripe Customer
+
+Navigate to Downloaded Strip Folder
+```shell
+$ ./stripe customers create --email=<email_id> --name=<name>
 ```
 
+2. Create Subscription for the Customer
+```shell
+$ ./stripe subscriptions create --customer=<customer_id> -d "items[0][price]"=<price_id>
+```
 
 ## Questions and issues
 

@@ -7,6 +7,6 @@ functions:
   strip-harbor:
     lang: python-waitress
     handler: ./strip-harbor
-    image: c8n.io/container-vendor/strip-harbor:1.0
+    image: stage.c8n.io/striptest/strip-harbor:1.0
     environment:
       WSGI_APP: strip_harbor_api.wsgi:application

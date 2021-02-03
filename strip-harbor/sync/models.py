@@ -5,8 +5,10 @@ import stripe
 import logging as log
 import sync.harbor as h
 import json
+
 env = environ.Env(DEBUG=(bool, False))
 stripe.api_key = env('STRIPE_API_KEY')
+
 
 class Customer(models.Model):
     email = models.CharField(max_length=70, null=True)
@@ -23,10 +25,12 @@ class Customer(models.Model):
             print("Could not create a Stripe customer")
 
     def ensure_email(self):
-        if not self.email:
-            self.email = stripe.Customer.retrieve(self.stripe_id)['email']
+        if not self.email or not self.name:
+            cust_data = stripe.Customer.retrieve(self.stripe_id)
+            self.email = cust_data['email']
+            self.name = cust_data['name']
 
     def create_harbor_user(self):
-        harbor_account = h.create_harbor_user_from_customer(self.email,self.stripe_id)
+        harbor_account = h.create_harbor_user_from_customer(self.email, self.stripe_id, self.name)
         self.harbor_login = harbor_account['name']
         self.save()
