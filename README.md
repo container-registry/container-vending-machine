@@ -46,6 +46,9 @@ HARBOR_PASSWORD='xxxx'
 HARBOR_PROJECT_ID='xxxx'
 MAILERSEND_API_KEY="xxxxx"
 FROM_EMAIL="abc@gmail.com"
+TEMPLATE_ID="xxxx"
+ACCOUNT_NAME="example"
+SUPPORT_EMAIL="example@xx.com"
 ```
 
 Step 2:

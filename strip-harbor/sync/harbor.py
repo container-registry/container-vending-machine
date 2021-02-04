@@ -4,7 +4,7 @@ import json
 import environ
 import logging as log
 import json
-from .utils import *
+from .MailerSendNewApiClientAPI import *
 
 env = environ.Env(DEBUG=(bool, False))
 
