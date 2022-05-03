@@ -1,4 +1,5 @@
-# Integrating Stripe payments with a container registry
+# The Container Vending Machine 
+or how to integrate Stripe with a container registry and sell your software.
 
 The purpose of this example is to show how a software vendor can integrate a subscription management service with a container registry with the purpose of distributing software as a container image.
 
