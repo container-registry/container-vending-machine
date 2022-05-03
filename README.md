@@ -3,6 +3,8 @@ or how to integrate Stripe with a container registry and sell your software.
 
 The purpose of this example is to show how a software vendor can integrate a subscription management service with a container registry with the purpose of distributing software as a container image.
 
+The article [Distributing Commercial Software Through Container Images Level-up your software distribution](https://container-registry.com/posts/distributing-commercial-software-through-container-images/) provides background information and dives into other related the concepts.
+
 ## High-level summary of the example
 
 Create Harbor robot accounts for your customers to allow them to pull your software from a Harbor registry.
