@@ -31,7 +31,7 @@ def auto_decode(data):
             return data[len(bom):].decode(encoding)
     # Lets check the first two lines as in PEP263
     for line in data.split(b'\n')[:2]:
-        if line[0:1] == b'#' and ENCODING_RE.search(line):
+        if line[:1] == b'#' and ENCODING_RE.search(line):
             result = ENCODING_RE.search(line)
             assert result is not None
             encoding = result.groups()[0].decode('ascii')

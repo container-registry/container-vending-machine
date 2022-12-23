@@ -47,6 +47,6 @@ def webhook_handler(request):
         handle_deleted_subscription(deleted_subscription)
 
     else:
-        print('Unhandled event type {}'.format(event.type))
+        print(f'Unhandled event type {event.type}')
 
     return HttpResponse(status=200)

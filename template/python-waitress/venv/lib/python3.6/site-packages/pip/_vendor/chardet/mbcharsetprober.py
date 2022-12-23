@@ -80,10 +80,11 @@ class MultiByteCharSetProber(CharSetProber):
 
         self._last_char[0] = byte_str[-1]
 
-        if self.state == ProbingState.DETECTING:
-            if (self.distribution_analyzer.got_enough_data() and
-                    (self.get_confidence() > self.SHORTCUT_THRESHOLD)):
-                self._state = ProbingState.FOUND_IT
+        if self.state == ProbingState.DETECTING and (
+            self.distribution_analyzer.got_enough_data()
+            and (self.get_confidence() > self.SHORTCUT_THRESHOLD)
+        ):
+            self._state = ProbingState.FOUND_IT
 
         return self.state
 

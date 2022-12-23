@@ -324,11 +324,7 @@ class Manifest(object):
         or just returned as-is (assumes it's a regex object).
         """
         if is_regex:
-            if isinstance(pattern, str):
-                return re.compile(pattern)
-            else:
-                return pattern
-
+            return re.compile(pattern) if isinstance(pattern, str) else pattern
         if _PYTHON_VERSION > (3, 2):
             # ditch start and end characters
             start, _, end = self._glob_to_re('_').partition('_')
@@ -354,19 +350,16 @@ class Manifest(object):
             if os.sep == '\\':
                 sep = r'\\'
             if _PYTHON_VERSION <= (3, 2):
-                pattern_re = '^' + base + sep.join((prefix_re,
-                                                    '.*' + pattern_re))
+                pattern_re = f"^{base}{sep.join((prefix_re, f'.*{pattern_re}'))}"
             else:
                 pattern_re = pattern_re[len(start): len(pattern_re) - len(end)]
-                pattern_re = r'%s%s%s%s.*%s%s' % (start, base, prefix_re, sep,
-                                                  pattern_re, end)
-        else:  # no prefix -- respect anchor flag
-            if anchor:
-                if _PYTHON_VERSION <= (3, 2):
-                    pattern_re = '^' + base + pattern_re
-                else:
-                    pattern_re = r'%s%s%s' % (start, base, pattern_re[len(start):])
-
+                pattern_re = f'{start}{base}{prefix_re}{sep}.*{pattern_re}{end}'
+        elif anchor:
+            pattern_re = (
+                f'^{base}{pattern_re}'
+                if _PYTHON_VERSION <= (3, 2)
+                else f'{start}{base}{pattern_re[len(start):]}'
+            )
         return re.compile(pattern_re)
 
     def _glob_to_re(self, pattern):

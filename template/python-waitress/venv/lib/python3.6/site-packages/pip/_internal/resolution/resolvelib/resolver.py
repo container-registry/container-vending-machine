@@ -83,9 +83,7 @@ class Resolver(BaseResolver):
         requirements = []
         for req in root_reqs:
             if req.constraint:
-                # Ensure we only accept valid constraints
-                problem = check_invalid_constraint_type(req)
-                if problem:
+                if problem := check_invalid_constraint_type(req):
                     raise InstallationError(problem)
                 if not req.match_markers():
                     continue
@@ -160,11 +158,10 @@ class Resolver(BaseResolver):
                     )
                     continue
 
-                looks_like_sdist = (
+                if looks_like_sdist := (
                     is_archive_file(candidate.source_link.file_path)
                     and candidate.source_link.ext != ".zip"
-                )
-                if looks_like_sdist:
+                ):
                     # is a local sdist -- show a deprecation warning!
                     reason = (
                         "Source distribution is being reinstalled despite an "
