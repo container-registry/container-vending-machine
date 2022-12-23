@@ -168,11 +168,7 @@ def make_setuptools_install_args(
     if use_user_site:
         args += ["--user", "--prefix="]
 
-    if pycompile:
-        args += ["--compile"]
-    else:
-        args += ["--no-compile"]
-
+    args += ["--compile"] if pycompile else ["--no-compile"]
     if header_dir:
         args += ["--install-headers", header_dir]
 

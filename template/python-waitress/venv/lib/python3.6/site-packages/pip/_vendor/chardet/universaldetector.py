@@ -233,13 +233,11 @@ class UniversalDetector(object):
         if not self._got_data:
             self.logger.debug('no data received!')
 
-        # Default to ASCII if it is all we've seen so far
         elif self._input_state == InputState.PURE_ASCII:
             self.result = {'encoding': 'ascii',
                            'confidence': 1.0,
                            'language': ''}
 
-        # If we have seen non-ASCII, return the best that met MINIMUM_THRESHOLD
         elif self._input_state == InputState.HIGH_BYTE:
             prober_confidence = None
             max_prober_confidence = 0.0
@@ -257,30 +255,34 @@ class UniversalDetector(object):
                 confidence = max_prober.get_confidence()
                 # Use Windows encoding name instead of ISO-8859 if we saw any
                 # extra Windows-specific bytes
-                if lower_charset_name.startswith('iso-8859'):
-                    if self._has_win_bytes:
-                        charset_name = self.ISO_WIN_MAP.get(lower_charset_name,
-                                                            charset_name)
+                if (
+                    lower_charset_name.startswith('iso-8859')
+                    and self._has_win_bytes
+                ):
+                    charset_name = self.ISO_WIN_MAP.get(lower_charset_name,
+                                                        charset_name)
                 self.result = {'encoding': charset_name,
                                'confidence': confidence,
                                'language': max_prober.language}
 
         # Log all prober confidences if none met MINIMUM_THRESHOLD
-        if self.logger.getEffectiveLevel() <= logging.DEBUG:
-            if self.result['encoding'] is None:
-                self.logger.debug('no probers hit minimum threshold')
-                for group_prober in self._charset_probers:
-                    if not group_prober:
-                        continue
-                    if isinstance(group_prober, CharSetGroupProber):
-                        for prober in group_prober.probers:
-                            self.logger.debug('%s %s confidence = %s',
-                                              prober.charset_name,
-                                              prober.language,
-                                              prober.get_confidence())
-                    else:
+        if (
+            self.logger.getEffectiveLevel() <= logging.DEBUG
+            and self.result['encoding'] is None
+        ):
+            self.logger.debug('no probers hit minimum threshold')
+            for group_prober in self._charset_probers:
+                if not group_prober:
+                    continue
+                if isinstance(group_prober, CharSetGroupProber):
+                    for prober in group_prober.probers:
                         self.logger.debug('%s %s confidence = %s',
-                                          group_prober.charset_name,
-                                          group_prober.language,
-                                          group_prober.get_confidence())
+                                          prober.charset_name,
+                                          prober.language,
+                                          prober.get_confidence())
+                else:
+                    self.logger.debug('%s %s confidence = %s',
+                                      group_prober.charset_name,
+                                      group_prober.language,
+                                      group_prober.get_confidence())
         return self.result

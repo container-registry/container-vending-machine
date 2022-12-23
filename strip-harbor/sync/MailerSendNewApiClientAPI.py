@@ -21,7 +21,7 @@ class MailerSendNewApiClient:
         self.mailersend_api_key = env("MAILERSEND_API_KEY")
         if not self.mailersend_api_key:
             self.mailersend_api_key=mailersend_api_key
-        self.headers_auth = "Bearer {}".format(self.mailersend_api_key)
+        self.headers_auth = f"Bearer {self.mailersend_api_key}"
         self.headers_default = {
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest",

@@ -69,17 +69,12 @@ class CharDistributionAnalysis(object):
 
     def feed(self, char, char_len):
         """feed a character with known length"""
-        if char_len == 2:
-            # we only care about 2-bytes character in our distribution analysis
-            order = self.get_order(char)
-        else:
-            order = -1
+        order = self.get_order(char) if char_len == 2 else -1
         if order >= 0:
             self._total_chars += 1
             # order is valid
-            if order < self._table_size:
-                if 512 > self._char_to_freq_order[order]:
-                    self._freq_chars += 1
+            if order < self._table_size and self._char_to_freq_order[order] < 512:
+                self._freq_chars += 1
 
     def get_confidence(self):
         """return confidence based on existing data"""
@@ -123,10 +118,11 @@ class EUCTWDistributionAnalysis(CharDistributionAnalysis):
         #   second byte range: 0xa1 -- 0xfe
         # no validation needed here. State machine has done that
         first_char = byte_str[0]
-        if first_char >= 0xC4:
-            return 94 * (first_char - 0xC4) + byte_str[1] - 0xA1
-        else:
-            return -1
+        return (
+            94 * (first_char - 0xC4) + byte_str[1] - 0xA1
+            if first_char >= 0xC4
+            else -1
+        )
 
 
 class EUCKRDistributionAnalysis(CharDistributionAnalysis):
@@ -142,10 +138,11 @@ class EUCKRDistributionAnalysis(CharDistributionAnalysis):
         #   second byte range: 0xa1 -- 0xfe
         # no validation needed here. State machine has done that
         first_char = byte_str[0]
-        if first_char >= 0xB0:
-            return 94 * (first_char - 0xB0) + byte_str[1] - 0xA1
-        else:
-            return -1
+        return (
+            94 * (first_char - 0xB0) + byte_str[1] - 0xA1
+            if first_char >= 0xB0
+            else -1
+        )
 
 
 class GB2312DistributionAnalysis(CharDistributionAnalysis):
@@ -180,13 +177,12 @@ class Big5DistributionAnalysis(CharDistributionAnalysis):
         #   second byte range: 0x40 -- 0x7e , 0xa1 -- 0xfe
         # no validation needed here. State machine has done that
         first_char, second_char = byte_str[0], byte_str[1]
-        if first_char >= 0xA4:
-            if second_char >= 0xA1:
-                return 157 * (first_char - 0xA4) + second_char - 0xA1 + 63
-            else:
-                return 157 * (first_char - 0xA4) + second_char - 0x40
-        else:
+        if first_char < 0xA4:
             return -1
+        if second_char >= 0xA1:
+            return 157 * (first_char - 0xA4) + second_char - 0xA1 + 63
+        else:
+            return 157 * (first_char - 0xA4) + second_char - 0x40
 
 
 class SJISDistributionAnalysis(CharDistributionAnalysis):
@@ -227,7 +223,4 @@ class EUCJPDistributionAnalysis(CharDistributionAnalysis):
         #   second byte range: 0xa1 -- 0xfe
         # no validation needed here. State machine has done that
         char = byte_str[0]
-        if char >= 0xA0:
-            return 94 * (char - 0xA1) + byte_str[1] - 0xa1
-        else:
-            return -1
+        return 94 * (char - 0xA1) + byte_str[1] - 0xa1 if char >= 0xA0 else -1

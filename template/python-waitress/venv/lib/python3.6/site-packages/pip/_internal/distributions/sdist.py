@@ -33,9 +33,7 @@ class SourceDistribution(AbstractDistribution):
         # Load pyproject.toml, to determine whether PEP 517 is to be used
         self.req.load_pyproject_toml()
 
-        # Set up the build isolation, if this requirement should be isolated
-        should_isolate = self.req.use_pep517 and build_isolation
-        if should_isolate:
+        if should_isolate := self.req.use_pep517 and build_isolation:
             self._setup_isolation(finder)
 
         self.req.prepare_metadata()
