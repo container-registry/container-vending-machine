@@ -30,13 +30,14 @@ A lot of this example is basic Django code, the most valuable pieces with the bu
 * [`stripe_harbor_example/sync/views.py`](https://github.com/chief-wizard/stripe-harbor-example/blob/master/stripe_harbor_example/sync/views.py) for Stripe webhook handling.
 
 ## Running the example
-```
-Requirements:-
 
--faas-cli
--Docker
--Stripe
-```
+Requirements:
+
+- faas-cli (optional)
+- Docker
+- Stripe 
+
+
 Step 1: Create an environment file at `Stripe Harbor Example/stripe_harbor/strip_harbor_api/.env`. Here’s an example of the `.env` file’s content (remember to use your Stripe and Harbor credentials):
 
 ```shell
